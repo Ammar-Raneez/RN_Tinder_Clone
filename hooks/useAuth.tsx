@@ -1,4 +1,6 @@
 import React, { createContext, useContext } from 'react';
+import * as Google from 'expo-google-app-auth';
+import environment from '../environment';
 
 type AuthProviderProps = {
   children: any
@@ -6,13 +8,24 @@ type AuthProviderProps = {
 
 type AuthContextType = {
   user: any;
+  signInWithGoogle: Function | any;
 }
 
-const AuthContext = createContext<AuthContextType>({ user: null });
+const config = {
+  scopes: ['profile', 'email'],
+  permissions: ['public_profile', 'email', 'gender', 'location'],
+  androidClientId: environment.ANDROID_ID
+}
+
+const AuthContext = createContext<AuthContextType>({ user: null, signInWithGoogle: null });
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const signInWithGoogle = async () => {
+    const loginResult = await Google.logInAsync(config);
+  }
+
   return (
-    <AuthContext.Provider value={{ user: 'me' }}>
+    <AuthContext.Provider value={{ user: null, signInWithGoogle }}>
       {children}
     </AuthContext.Provider>
   )
