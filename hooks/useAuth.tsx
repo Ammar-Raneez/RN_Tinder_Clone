@@ -21,7 +21,11 @@ const AuthContext = createContext<AuthContextType>({ user: null, signInWithGoogl
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signInWithGoogle = async () => {
-    const loginResult = await Google.logInAsync(config);
+    Google.logInAsync(config).then((loginInResult) => {
+      if (loginInResult.type === 'success') {
+        
+      }
+    });
   }
 
   return (
