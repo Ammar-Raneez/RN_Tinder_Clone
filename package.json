@@ -7,13 +7,15 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "build:tailwind": "tailwindcss --input input.css --output tailwind.css --no-autoprefixer && tailwind-rn",
+    "dev:tailwind": "concurrently \"tailwindcss --input input.css --output tailwind.css --no-autoprefixer --watch\" \"tailwind-rn --watch\""
   },
   "dependencies": {
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "expo": "~44.0.0",
-    "expo-google-app-auth": "^9.0.0",
+    "expo-google-app-auth": "~8.3.0",
     "expo-status-bar": "~1.2.0",
     "firebase": "^9.6.6",
     "react": "17.0.1",
@@ -28,6 +30,9 @@
     "@babel/core": "^7.12.9",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
+    "concurrently": "^7.0.0",
+    "postcss": "^8.4.6",
+    "tailwindcss": "^3.0.22",
     "typescript": "~4.3.5"
   },
   "private": true
