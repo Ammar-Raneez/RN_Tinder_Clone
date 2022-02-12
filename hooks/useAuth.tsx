@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import * as Google from 'expo-google-app-auth';
 import environment from '../environment';
 import {
@@ -15,9 +15,10 @@ type AuthProviderProps = {
 
 type AuthContextType = {
   user: any;
+  isLoading: boolean;
   signInWithGoogle: any;
   logout: any;
-  error: any;
+  error?: any;
 };
 
 const config = {
@@ -28,6 +29,7 @@ const config = {
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  isLoading: false,
   error: null,
   logout: null,
   signInWithGoogle: null,
@@ -39,17 +41,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoadingInitial, setisLoadingInitial] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    return onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
+  useEffect(() => onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setUser(user);
+    } else {
+      setUser(null);
+    }
 
-      setisLoadingInitial(false);
-    });
-  }, []);
+    setisLoadingInitial(false);
+  }), []);
 
   const signInWithGoogle = async () => {
     try {
@@ -73,9 +73,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setIsLoading(false);
   };
 
+  const memoedValue = useMemo(() => ({
+    user,
+    isLoading,
+    signInWithGoogle,
+    logout
+  }), [user, isLoading, error]);
+
   return (
     <AuthContext.Provider
-      value={{ user: null, error, signInWithGoogle, logout }}
+      value={memoedValue}
     >
       {!isLoadingInitial && children}
     </AuthContext.Provider>
