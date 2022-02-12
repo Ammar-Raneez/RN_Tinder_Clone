@@ -1,4 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
+import { LogBox } from 'react-native';
+LogBox.ignoreAllLogs();                       // ignore AsyncStorage warning ftm
 
 import { AuthProvider } from './hooks/useAuth';
 import StackNavigator from './StackNavigator';
