@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   Platform,
   StatusBar,
@@ -13,17 +13,43 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useTailwind } from 'tailwind-rn';
 import { AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
 import Swiper from 'react-native-deck-swiper';
+import { collection, doc, onSnapshot } from 'firebase/firestore';
 
 import { RootStackParamList } from '../StackNavigator';
 import useAuth from '../hooks/useAuth';
+import { db } from '../firebase';
 
 type HomeScreenNavigationProp = NavigationProp<RootStackParamList, 'Home'>;
 
 const HomeScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const { user, logout } = useAuth();
+  const [profiles, setProfiles] = useState<any>([]);
   const tw = useTailwind();
   const swiperRef = useRef(null);
+
+  useLayoutEffect(() => onSnapshot(doc(db, 'users', user.uid), (snapshot) => {
+    if (!snapshot.exists()) {
+      navigation.navigate('Modal');
+    }
+  }), []);
+
+  useEffect(() => {
+    let unsub;
+    const fetchCards = async () => {
+      unsub = onSnapshot(collection(db, 'users'), (snapshot) => {
+          const data = snapshot.docs.filter((doc) => doc.id !== user.uid).map((doc) => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+
+          setProfiles(data);
+      });
+    }
+
+    fetchCards();
+    return unsub;
+  }, []);
 
   return (
     <SafeAreaView
@@ -77,8 +103,8 @@ const HomeScreen = () => {
           onSwipedRight={() => {
             console.log('MATCH')
           }}
-          cards={DUMMY_DATA}
-          renderCard={(card) => (
+          cards={profiles}
+          renderCard={(card: any) => card ? (
             <View key={card.id} style={tw('bg-white h-3/4 rounded-xl')}>
               <Image
                 style={tw('absolute top-0 h-full w-full rounded-xl')}
@@ -92,12 +118,27 @@ const HomeScreen = () => {
               >
                 <View>
                   <Text style={tw('text-xl font-bold')}>
-                    {card.firstName} {card.lastName}
+                    {card.displayName}
                   </Text>
                   <Text>{card.job}</Text>
                 </View>
                 <Text style={tw('text-2xl font-bold')}>{card.age}</Text>
               </View>
+            </View>
+          ) : (
+            <View
+              style={[
+                tw('relative bg-white h-3/4 rounded-xl justify-center items-center'),
+                styles.cardShadow
+              ]}
+            >
+              <Text style={tw('pb-5 font-bold')}>No more profiles</Text>
+              <Image
+                style={tw('h-20 w-20')}
+                height={100}
+                width={30}
+                source={{ uri: 'https://cdn.shopify.com/s/files/1/1061/1924/products/Crying_Face_Emoji_large.png?v=1571606037' }}
+              />
             </View>
           )}
         />

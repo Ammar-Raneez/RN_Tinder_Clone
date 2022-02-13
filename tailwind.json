@@ -114,6 +114,11 @@
 			"width": 256
 		}
 	},
+	"w-20": {
+		"style": {
+			"width": 80
+		}
+	},
 	"flex-1": {
 		"style": {
 			"flexGrow": 1,
@@ -267,6 +272,11 @@
 	"pt-4": {
 		"style": {
 			"paddingTop": 16
+		}
+	},
+	"pb-5": {
+		"style": {
+			"paddingBottom": 20
 		}
 	},
 	"text-center": {
