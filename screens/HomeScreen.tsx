@@ -100,7 +100,7 @@ const HomeScreen = () => {
     const userSwipes = await getDoc(doc(db, 'users', userSwiped.id, 'swipes', user.uid));
     if (userSwipes.exists()) {
       // A match has been formed (both have swiped)
-      console.log(`You MATCHED with ${userSwiped.displayName}`);
+      // console.log(`You MATCHED with ${userSwiped.displayName}`);
       setDoc(doc(db, 'users', user.uid, 'swipes', userSwiped.id), userSwiped);
 
       // Create a MATCH
@@ -116,7 +116,7 @@ const HomeScreen = () => {
       navigation.navigate('Match', { loggedInProfile, userSwiped });
     } else {
       // User has swiped, you haven't yet
-      console.log(`You swiped on ${userSwiped.displayName}`);
+      // console.log(`You swiped on ${userSwiped.displayName}`);
       setDoc(doc(db, 'users', user.uid, 'swipes', userSwiped.id), userSwiped);
     }
   }

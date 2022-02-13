@@ -1,17 +1,20 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useTailwind } from 'tailwind-rn';
 
 import useAuth from '../hooks/useAuth';
 import getMatchedUserInfo from '../lib/getMatchedUserInfo';
+import { RootStackParamList } from '../StackNavigator';
 
 interface ChatRowProps {
   matchDetails: any;
 }
 
+type ChatRowNavigationProp = NavigationProp<RootStackParamList, 'Chat'>;
+
 const ChatRow = ({ matchDetails }: ChatRowProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<ChatRowNavigationProp>();
   const { user } = useAuth();
   const tw = useTailwind();
   const [matchedUserInfo, setMatchedUserInfo] = useState<any>(null);
@@ -22,10 +25,11 @@ const ChatRow = ({ matchDetails }: ChatRowProps) => {
 
   return (
     <TouchableOpacity
-      style={[tw('flex-row items-center py-5 px-5 bg-white mx-3 my-1 rounded-lg'), styles.cardShadow, { padding: 10 }]}
+      style={[tw('flex-row items-center py-5 px-5 bg-white mx-3 my-1 rounded-lg'), styles.cardShadow]}
+      onPress={() => navigation.navigate('Message', { matchDetails })}
     >
       <Image
-        style={[tw('rounded-full h-16 w-16 mr-4'), { marginRight: 20 }]}
+        style={tw('rounded-full h-16 w-16 mr-4')}
         source={{ uri: matchedUserInfo?.photoURL }}
       />
 
