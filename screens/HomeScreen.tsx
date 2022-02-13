@@ -31,8 +31,8 @@ import {
 } from 'firebase/firestore';
 
 import { RootStackParamList } from '../StackNavigator';
-import useAuth from '../hooks/useAuth';
 import { db } from '../firebase';
+import useAuth from '../hooks/useAuth';
 import generateId from '../lib/generateId';
 
 type HomeScreenNavigationProp = NavigationProp<RootStackParamList, 'Home'>;

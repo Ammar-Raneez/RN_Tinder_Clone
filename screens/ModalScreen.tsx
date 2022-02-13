@@ -4,9 +4,9 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore'; 
 import { useTailwind } from 'tailwind-rn';
 
-import useAuth from '../hooks/useAuth';
 import { db } from '../firebase';
 import { RootStackParamList } from '../StackNavigator';
+import useAuth from '../hooks/useAuth';
 
 type ModalScreenNavigationProp = NavigationProp<RootStackParamList, 'Modal'>;
 
