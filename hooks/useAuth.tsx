@@ -3,7 +3,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
-  useState
+  useState,
 } from 'react';
 import * as Google from 'expo-google-app-auth';
 import {
@@ -48,15 +48,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoadingInitial, setisLoadingInitial] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => onAuthStateChanged(auth, (user) => {
-    if (user) {
-      setUser(user);
-    } else {
-      setUser(null);
-    }
+  useEffect(
+    () =>
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUser(user);
+        } else {
+          setUser(null);
+        }
 
-    setisLoadingInitial(false);
-  }), []);
+        setisLoadingInitial(false);
+      }),
+    []
+  );
 
   const signInWithGoogle = async () => {
     try {
@@ -80,17 +84,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setIsLoading(false);
   };
 
-  const memoedValue = useMemo(() => ({
-    user,
-    isLoading,
-    signInWithGoogle,
-    logout
-  }), [user, isLoading, error]);
+  const memoedValue = useMemo(
+    () => ({
+      user,
+      isLoading,
+      signInWithGoogle,
+      logout,
+    }),
+    [user, isLoading, error]
+  );
 
   return (
-    <AuthContext.Provider
-      value={memoedValue}
-    >
+    <AuthContext.Provider value={memoedValue}>
       {!isLoadingInitial && children}
     </AuthContext.Provider>
   );

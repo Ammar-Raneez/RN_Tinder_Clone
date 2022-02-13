@@ -1,10 +1,5 @@
+import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
 import React from 'react';
-import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity
-} from 'react-native';
 import { useTailwind } from 'tailwind-rn';
 
 import useAuth from '../hooks/useAuth';
@@ -23,18 +18,17 @@ const LoginScreen = () => {
         <TouchableOpacity
           style={[
             tw('absolute bottom-40 w-52 bg-white p-4 rounded-2xl'),
-            { marginHorizontal: '25%' }
+            { marginHorizontal: '25%' },
           ]}
           onPress={signInWithGoogle}
         >
-          <Text
-            style={tw('font-semibold text-center')}>
+          <Text style={tw('font-semibold text-center')}>
             Sign in & get swiping
           </Text>
         </TouchableOpacity>
       </ImageBackground>
     </View>
-  )
-}
+  );
+};
 
 export default LoginScreen;

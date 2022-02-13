@@ -1,6 +1,10 @@
-import React from 'react';
-import { NavigationProp, useNavigation, useRoute } from '@react-navigation/native';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
+import {
+  NavigationProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import React from 'react';
 import { useTailwind } from 'tailwind-rn';
 
 import { RootStackParamList } from '../StackNavigator';
@@ -18,7 +22,9 @@ const MatchScreen = () => {
       <View style={tw('justify-center px-10 pt-20')}>
         <Image
           style={tw('h-20 w-full')}
-          source={{ uri: 'https://e9digital.com/love-at-first-website/images/its-a-match.png' }}
+          source={{
+            uri: 'https://e9digital.com/love-at-first-website/images/its-a-match.png',
+          }}
         />
       </View>
 
@@ -47,7 +53,7 @@ const MatchScreen = () => {
         <Text style={tw('text-center')}>Send a Message</Text>
       </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 
 export default MatchScreen;
