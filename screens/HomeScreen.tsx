@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   Platform,
   StatusBar,
@@ -23,6 +23,7 @@ const HomeScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const { user, logout } = useAuth();
   const tw = useTailwind();
+  const swiperRef = useRef(null);
 
   return (
     <SafeAreaView
@@ -45,6 +46,7 @@ const HomeScreen = () => {
 
       <View style={tw('flex-1 -mt-6')}>
         <Swiper
+          ref={swiperRef}
           stackSize={5}
           cardIndex={0}
           verticalSwipe={false}
@@ -69,6 +71,12 @@ const HomeScreen = () => {
               }
             }
           }}
+          onSwipedLeft={() => {
+            console.log('PASS')
+          }}
+          onSwipedRight={() => {
+            console.log('MATCH')
+          }}
           cards={DUMMY_DATA}
           renderCard={(card) => (
             <View key={card.id} style={tw('bg-white h-3/4 rounded-xl')}>
@@ -78,7 +86,7 @@ const HomeScreen = () => {
               />
               <View
                 style={[
-                  tw('absolute bottom-0 bg-white w-full flex-row justify-between h-20 px-6 py-2 rounded-b-xl'),
+                  tw('absolute bottom-0 bg-white w-full flex-row justify-between items-center h-20 px-6 py-2 rounded-b-xl'),
                   styles.cardShadow
                 ]}
               >
@@ -93,6 +101,21 @@ const HomeScreen = () => {
             </View>
           )}
         />
+      </View>
+
+      <View style={tw('flex flex-row justify-evenly')}>
+        <TouchableOpacity
+          onPress={() => (swiperRef.current as any).swipeLeft()}
+          style={tw('items-center justify-center rounded-full w-16 h-16 bg-red-200')}
+        >
+          <Entypo size={30} name="cross" color="red" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => (swiperRef.current as any).swipeRight()}
+          style={tw('items-center justify-center rounded-full w-16 h-16 bg-green-200')}
+        >
+          <AntDesign size={30} name="heart" color="green" />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   )
