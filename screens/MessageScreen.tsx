@@ -10,15 +10,24 @@ import {
   Keyboard,
   FlatList
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRoute } from '@react-navigation/native';
 import { useTailwind } from 'tailwind-rn';
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp
+} from 'firebase/firestore';
 
 import Header from '../components/Header';
 import SenderMessage from '../components/SenderMessage';
 import ReceiverMessage from '../components/ReceiverMessage';
 import getMatchedUserInfo from '../lib/getMatchedUserInfo';
 import useAuth from '../hooks/useAuth';
+import { db } from '../firebase';
 
 const MessageScreen = () => {
   const { user } = useAuth();
@@ -28,8 +37,35 @@ const MessageScreen = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<any>([]);
 
-  const sendMessage = () => {
+  useEffect(() =>
+    onSnapshot(
+      query(
+        collection(db, 'matches', matchDetails.id, 'messages'),
+        orderBy('timestamp', 'desc')
+      ), (snapshot) => {
+        setMessages(snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })));
+      }
+    ), [matchDetails, db]);
 
+  const sendMessage = () => {
+    if (input.length === 0) {
+      return;
+    }
+
+    addDoc(collection(db, 'matches', matchDetails.id, 'messages'), {
+      timestamp: serverTimestamp(),
+      userId: user.uid,
+      displayName: user.displayName,
+
+      // you should see your dp
+      photoURL: matchDetails.users[user.uid].photoURL,
+      message: input
+    });
+
+    setInput('');
   }
 
   return (
@@ -50,6 +86,7 @@ const MessageScreen = () => {
         {/* when you click on a message, we need the keyboard to dismiss, w/o performing any action */}
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <FlatList
+            inverted={true}
             data={messages}
             style={tw('pl-4')}
             keyExtractor={(item) => item.id}
