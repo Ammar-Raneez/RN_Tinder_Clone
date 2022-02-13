@@ -6,10 +6,10 @@ import { useNavigation } from '@react-navigation/native';
 
 interface HeaderProps {
   title: string;
-  callEnabled: boolean;
+  callEnabled?: boolean;
 }
 
-function Header({ title, callEnabled }: HeaderProps) {
+function Header({ title, callEnabled = false }: HeaderProps) {
   const navigation = useNavigation();
   const tw = useTailwind();
 
