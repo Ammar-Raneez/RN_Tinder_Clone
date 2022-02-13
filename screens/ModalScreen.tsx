@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore'; 
 import { useTailwind } from 'tailwind-rn';
 
 import useAuth from '../hooks/useAuth';
+import { db } from '../firebase';
+import { RootStackParamList } from '../StackNavigator';
+
+type ModalScreenNavigationProp = NavigationProp<RootStackParamList, 'Modal'>;
 
 const ModalScreen = () => {
+  const navigation = useNavigation<ModalScreenNavigationProp>();
   const { user } = useAuth();
   const tw = useTailwind();
   const [image, setImage] = useState<string>('');
@@ -12,6 +19,19 @@ const ModalScreen = () => {
   const [age, setAge] = useState<string>('');
 
   const incompleteForm = !image || !job || !age;
+
+  const updateUserProfile = () => {
+    setDoc(doc(db, 'users', user.uid), {
+      id: user.uid,
+      displayName: user.displayName,
+      photoURL: image,
+      timestamp: serverTimestamp(),
+      job,
+      age
+    }).then(() => {
+      navigation.navigate('Home')
+    }).catch((err) => alert(err));
+  }
 
   return (
     <View style={tw('flex-1 items-center pt-4')}>
@@ -30,7 +50,9 @@ const ModalScreen = () => {
       </Text>
       <TextInput
         value={image}
-        onChangeText={(text) => setImage(text)}
+
+        // (text) => setImage(text) can be converted to as below
+        onChangeText={setImage}
         placeholder="Enter a Profile Pic URL"
       />
       <Text style={tw('text-center p-4 font-bold text-red-400')}>
@@ -38,7 +60,7 @@ const ModalScreen = () => {
       </Text>
       <TextInput
         value={job}
-        onChangeText={(text) => setJob(text)}
+        onChangeText={setJob}
         placeholder="Enter your Occupation"
       />
       <Text style={tw('text-center p-4 font-bold text-red-400')}>
@@ -46,7 +68,7 @@ const ModalScreen = () => {
       </Text>
       <TextInput
         value={age}
-        onChangeText={(text) => setAge(text)}
+        onChangeText={setAge}
         placeholder="Enter your Age"
         maxLength={2}
         keyboardType="numeric"
@@ -58,6 +80,7 @@ const ModalScreen = () => {
           tw('w-64 p-3 rounded-xl absolute bottom-10'),
           incompleteForm ? tw('bg-gray-400') : tw('bg-red-400')
         ]}
+        onPress={updateUserProfile}
       >
         <Text style={tw('text-center text-white text-xl')}>Update Profile</Text>
       </TouchableOpacity>
