@@ -1,11 +1,14 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { SafeAreaView, Platform, StatusBar } from 'react-native';
+import Header from '../components/Header';
 
 const ChatScreen = () => {
   return (
-    <View>
-      <Text>ChatScreen</Text>
-    </View>
+    <SafeAreaView
+      style={[{ paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }]}
+    >
+      <Header callEnabled title="Chat" />
+    </SafeAreaView>
   )
 }
 
