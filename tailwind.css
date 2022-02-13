@@ -2,12 +2,44 @@
   position: absolute
 }
 
+.relative {
+  position: relative
+}
+
+.left-5 {
+  left: 1.25rem
+}
+
+.top-3 {
+  top: 0.75rem
+}
+
 .bottom-40 {
   bottom: 10rem
 }
 
-.flex {
-  display: flex
+.right-5 {
+  right: 1.25rem
+}
+
+.h-12 {
+  height: 3rem
+}
+
+.h-16 {
+  height: 4rem
+}
+
+.h-14 {
+  height: 3.5rem
+}
+
+.w-12 {
+  width: 3rem
+}
+
+.w-14 {
+  width: 3.5rem
 }
 
 .w-52 {
@@ -16,6 +48,22 @@
 
 .flex-1 {
   flex: 1 1 0%
+}
+
+.flex-row {
+  flex-direction: row
+}
+
+.items-center {
+  align-items: center
+}
+
+.justify-between {
+  justify-content: space-between
+}
+
+.rounded-full {
+  border-radius: 9999px
 }
 
 .rounded-2xl {
@@ -31,15 +79,15 @@
   padding: 1rem
 }
 
+.px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem
+}
+
 .text-center {
   text-align: center
 }
 
 .font-semibold {
   font-weight: 600
-}
-
-.text-blue-800 {
-  --tw-text-opacity: 1;
-  color: rgb(30 64 175 / var(--tw-text-opacity))
 }

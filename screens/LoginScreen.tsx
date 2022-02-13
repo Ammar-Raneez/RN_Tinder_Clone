@@ -1,5 +1,4 @@
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import React, { useLayoutEffect } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -9,20 +8,10 @@ import {
 import { useTailwind } from 'tailwind-rn';
 
 import useAuth from '../hooks/useAuth';
-import { RootStackParamList } from '../StackNavigator';
-
-type LoginScreenNavigationProp = NavigationProp<RootStackParamList, 'Login'>;
 
 const LoginScreen = () => {
   const { signInWithGoogle } = useAuth();
   const tw = useTailwind();
-  const navigation = useNavigation<LoginScreenNavigationProp>();
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false
-    })
-  }, []);
 
   return (
     <View style={tw('flex-1')}>
