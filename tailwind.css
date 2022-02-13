@@ -34,6 +34,18 @@
   bottom: 2.5rem
 }
 
+.m-5 {
+  margin: 1.25rem
+}
+
+.m-4 {
+  margin: 1rem
+}
+
+.m-6 {
+  margin: 1.5rem
+}
+
 .-mt-6 {
   margin-top: -1.5rem
 }
@@ -48,6 +60,18 @@
 
 .mt-6 {
   margin-top: 1.5rem
+}
+
+.mt-5 {
+  margin-top: 1.25rem
+}
+
+.mt-20 {
+  margin-top: 5rem
+}
+
+.mt-40 {
+  margin-top: 10rem
 }
 
 .flex {
@@ -82,6 +106,14 @@
   height: 50%
 }
 
+.h-32 {
+  height: 8rem
+}
+
+.h-24 {
+  height: 6rem
+}
+
 .w-12 {
   width: 3rem
 }
@@ -108,6 +140,10 @@
 
 .w-20 {
   width: 5rem
+}
+
+.w-32 {
+  width: 8rem
 }
 
 .flex-1 {
@@ -208,6 +244,31 @@
   padding-bottom: 0.5rem
 }
 
+.px-10 {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem
+}
+
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem
+}
+
+.px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem
+}
+
+.py-5 {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem
+}
+
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem
+}
+
 .pt-1 {
   padding-top: 0.25rem
 }
@@ -222,6 +283,10 @@
 
 .pb-5 {
   padding-bottom: 1.25rem
+}
+
+.pt-20 {
+  padding-top: 5rem
 }
 
 .text-center {
