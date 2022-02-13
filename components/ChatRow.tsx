@@ -6,6 +6,8 @@ import { useTailwind } from 'tailwind-rn';
 import useAuth from '../hooks/useAuth';
 import getMatchedUserInfo from '../lib/getMatchedUserInfo';
 import { RootStackParamList } from '../StackNavigator';
+import { db } from '../firebase';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 interface ChatRowProps {
   matchDetails: any;
@@ -18,10 +20,19 @@ const ChatRow = ({ matchDetails }: ChatRowProps) => {
   const { user } = useAuth();
   const tw = useTailwind();
   const [matchedUserInfo, setMatchedUserInfo] = useState<any>(null);
+  const [lastMessage, setLastMessage] = useState<string>('')
 
   useEffect(() => {
     setMatchedUserInfo(getMatchedUserInfo(matchDetails.users, user.uid));
   }, [matchDetails, user]);
+
+  useEffect(() =>
+    onSnapshot(
+      query(
+        collection(db, 'matches', matchDetails.id, 'messages'),
+        orderBy('timestamp', 'desc')
+      ), (snapshot) => setLastMessage(snapshot.docs[0]?.data()?.message)
+  ), [matchDetails, db]);
 
   return (
     <TouchableOpacity
@@ -37,7 +48,7 @@ const ChatRow = ({ matchDetails }: ChatRowProps) => {
         <Text style={tw('text-lg font-semibold')}>
           {matchedUserInfo?.displayName}
         </Text>
-        <Text>{'' || "Say Hi!"}</Text>
+        <Text>{lastMessage || "Say Hi!"}</Text>
       </View>
     </TouchableOpacity>
   );
