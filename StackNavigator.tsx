@@ -12,6 +12,7 @@ export type RootStackParamList = {
   Chat: undefined;
   Login: undefined;
   Modal: undefined;
+  Match: any;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -29,8 +30,11 @@ const StackNavigator = () => {
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Chat" component={ChatScreen} />
           </Stack.Group>
-          <Stack.Group>
-            <Stack.Screen options={{ presentation: 'modal' }} name="Modal" component={ModalScreen} />
+          <Stack.Group screenOptions={{ presentation: 'modal' }}>
+            <Stack.Screen name="Modal" component={ModalScreen} />
+          </Stack.Group>
+          <Stack.Group screenOptions={{ presentation: 'transparentModal' }}>
+            <Stack.Screen name="Match" component={ModalScreen} />
           </Stack.Group>
         </>
       ) : (
