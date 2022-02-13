@@ -13,7 +13,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useTailwind } from 'tailwind-rn';
 import { AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
 import Swiper from 'react-native-deck-swiper';
-import { collection, doc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDocs, onSnapshot, query, setDoc, where } from 'firebase/firestore';
 
 import { RootStackParamList } from '../StackNavigator';
 import useAuth from '../hooks/useAuth';
@@ -37,19 +37,50 @@ const HomeScreen = () => {
   useEffect(() => {
     let unsub;
     const fetchCards = async () => {
-      unsub = onSnapshot(collection(db, 'users'), (snapshot) => {
-          const data = snapshot.docs.filter((doc) => doc.id !== user.uid).map((doc) => ({
-            id: doc.id,
-            ...doc.data()
-          }));
+      const passesSnapshot = await getDocs(collection(db, 'users', user.uid, 'passes'));
+      const passes = passesSnapshot.docs.map((doc) => doc.id);
+      const swipesSnapshot = await getDocs(collection(db, 'users', user.uid, 'swipes'));
+      const swipes = swipesSnapshot.docs.map((doc) => doc.id);
 
-          setProfiles(data);
+      // filtering on firebase requires some value, so passing a value that will never be an id would be sufficient;
+      const passedIds = passes.length > 0 ? passes : ['somedummyvalue'];
+      const swipedIds = swipes.length > 0 ? swipes : ['somedummyvalue'];
+
+      unsub = onSnapshot(
+        query(collection(db, 'users'), where('id', 'not-in', [...passedIds, ...swipedIds])), (snapshot) => {
+        const data = snapshot.docs.filter((doc) => doc.id !== user.uid).map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+
+        setProfiles(data);
       });
     }
 
     fetchCards();
     return unsub;
   }, []);
+
+  const swipeLeft = async (cardIndex: number) => {
+    if (!profiles[cardIndex]) {
+      return;
+    }
+
+    const userSwiped = profiles[cardIndex];
+    console.log(`You swiped PASS on ${userSwiped.displayName}`);
+    setDoc(doc(db, 'users', user.uid, 'passes', userSwiped.id), userSwiped);
+  }
+
+  const swipeRight = async (cardIndex: number) => {
+    if (!profiles[cardIndex]) {
+      return;
+    }
+
+    const userSwiped = profiles[cardIndex];
+    console.log(`You swiped MATCH on ${userSwiped.displayName}`);
+    setDoc(doc(db, 'users', user.uid, 'swipes', userSwiped.id), userSwiped);
+
+  }
 
   return (
     <SafeAreaView
@@ -97,12 +128,8 @@ const HomeScreen = () => {
               }
             }
           }}
-          onSwipedLeft={() => {
-            console.log('PASS')
-          }}
-          onSwipedRight={() => {
-            console.log('MATCH')
-          }}
+          onSwipedLeft={(cardIndex) => swipeLeft(cardIndex)}
+          onSwipedRight={(cardIndex) => swipeRight(cardIndex)}
           cards={profiles}
           renderCard={(card: any) => card ? (
             <View key={card.id} style={tw('bg-white h-3/4 rounded-xl')}>
@@ -144,7 +171,7 @@ const HomeScreen = () => {
         />
       </View>
 
-      <View style={tw('flex flex-row justify-evenly')}>
+      <View style={[tw('flex flex-row justify-evenly'), { marginBottom: 20 }]}>
         <TouchableOpacity
           onPress={() => (swiperRef.current as any).swipeLeft()}
           style={tw('items-center justify-center rounded-full w-16 h-16 bg-red-200')}
@@ -176,30 +203,3 @@ const styles = StyleSheet.create({
     elevation: 2.1
   }
 });
-
-const DUMMY_DATA = [
-  {
-    firstName: 'Sonny',
-    lastName: 'Sangha',
-    job: 'Software Developer',
-    photoURL: 'https://avatars.githubusercontent.com/u/24712956?v=4',
-    age: 27,
-    id: 123
-  },
-  {
-    firstName: 'Elon',
-    lastName: 'Musk',
-    job: 'Software Developer',
-    photoURL: 'https://upload.wikimedia.org/wikipedia/commons/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg',
-    age: 40,
-    id: 456
-  },
-  {
-    firstName: 'Ammar',
-    lastName: 'Raneez',
-    job: 'Software Developer',
-    photoURL: 'https://avatars.githubusercontent.com/u/54928498?v=4',
-    age: 20,
-    id: 789
-  }
-]
